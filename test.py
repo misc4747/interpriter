@@ -36,6 +36,37 @@ class TestInterpreter(unittest.TestCase):
         expr4 = tGte(tInt(1), tInt(1))
         self.assertEqual(evaluate(expr4), True)
         
+    def test_logic(self):        
+        print('1 && 1 = True')
+        expr3 = tLAnd(tInt(1), tInt(1))
+        self.assertEqual(evaluate(expr3), True)
+        
+        print('1 || 0 = True')
+        expr4 = tLOr(tInt(1), tInt(0))
+        self.assertEqual(evaluate(expr4), True)
+        
+    def test_bit(self):
+        print('6 & 3 = 2')
+        expr1 = tBitAnd(tInt(6), tInt(3))
+        self.assertEqual(evaluate(expr1), 2)
+        
+        print('6 | 3 = 7')
+        expr2 = tBitOr(tInt(6), tInt(3))
+        self.assertEqual(evaluate(expr2), 7)
+        
+        print('6 ^ 3 = 5')
+        expr3 = tBitXor(tInt(6), tInt(3))
+        self.assertEqual(evaluate(expr3), 5)
+        
+    def test_sequence(self):
+        print('1; 2 = 2')
+        expr1 = Sequence([tInt(1), tInt(2)])
+        self.assertEqual(evaluate(expr1), 2)
+        
+        print('1; 2; 3 = 3')
+        expr2 = Sequence([tInt(1), tInt(2), tInt(3)])
+        self.assertEqual(evaluate(expr2), 3)
+        
     def test_assign_and_Ident(self):
         print('{a = 100; a} = 100')
         expr1 = Sequence([tAs('a', tInt(100)), tId('a')])

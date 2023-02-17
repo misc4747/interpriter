@@ -83,6 +83,27 @@ def tLte(a,b):
 def tGte(a,b):
     return BinExpr('>=', a, b)
 
+def tEq(a,b):
+    return BinExpr('==', a, b)
+
+def tNeq(a,b):
+    return BinExpr('!=', a, b)
+
+def tBitAnd(a,b):
+    return BinExpr('&', a, b)
+
+def tBitOr(a,b):
+    return BinExpr('|', a, b)
+
+def tBitXor(a,b):
+    return BinExpr('^', a, b)
+
+def tLAnd(a,b):
+    return BinExpr('&&', a, b)
+
+def tLOr(a,b):
+    return BinExpr('||', a, b)
+
 def tAs(name, expr):
     return Assign(name, expr)
 
@@ -118,6 +139,22 @@ def eval_compare(expr, env):
         return evaluate(expr.left, env) != evaluate(expr.right, env)
     else:
         raise Exception('Unknown operator: ' + op)
+    
+def eval_bit_operation(expr, env):
+    op = expr.op
+    if op == '&':
+        return evaluate(expr.left, env) & evaluate(expr.right, env)
+    elif op == '|':
+        return evaluate(expr.left, env) | evaluate(expr.right, env)
+    elif op == '^':
+        return evaluate(expr.left, env) ^ evaluate(expr.right, env)
+    
+def eval_logic_operation(expr, env):
+    op = expr.op
+    if op == '&&':
+        return evaluate(expr.left, env) and evaluate(expr.right, env)
+    elif op == '||':
+        return evaluate(expr.left, env) or evaluate(expr.right, env)
 
 def eval_program(program):
     env = {}
@@ -133,6 +170,10 @@ def evaluate(expr, env={}):
             return eval_math(expr, env)
         elif expr.op in ['<', '>', '<=', '>=', '==', '!=']:
             return eval_compare(expr, env)
+        elif expr.op in ['&', '|', '^']:
+            return eval_bit_operation(expr, env)
+        elif expr.op in ['&&', '||']:
+            return eval_logic_operation(expr, env)
         else:
             raise Exception('Unknown operator: ' + expr.op)
     elif type(expr) == Sequence:
